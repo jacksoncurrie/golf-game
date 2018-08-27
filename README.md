@@ -1,2 +1,2 @@
-# golf-game
-C# console game
+# Golf Game
+C# console game using maths
