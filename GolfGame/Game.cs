@@ -17,7 +17,6 @@ namespace GolfGame
         Hole currentHole;
         List<Hole> course;
         char[,] grid;
-        int shots;
 
         public Game()
         {
@@ -62,7 +61,7 @@ namespace GolfGame
 
             // Random hole position
             Random random = new Random();
-            currentHole.HoleXPos = random.Next(50, 110);
+            currentHole.HoleXPos = random.Next(50, 108);
 
             if (currentHole == course[7])
             {
@@ -77,9 +76,9 @@ namespace GolfGame
 
             Console.Write
             (
-                $"==========================\n" +
-                $"   {currentHole.Name}\n" +
-                $"==========================\n" +
+                $"===================\n" +
+                $" {currentHole.Name}\n" +
+                $"===================\n" +
                 $"\n" +
                 $"Press any key to start hole..."
             );
@@ -214,17 +213,18 @@ namespace GolfGame
             Console.Write
             (
                 "+----+----+----+----+----+----+----+----+----+-------+\n" +
-                "| 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | Total |\n" +
+                "|  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 | Total |\n" +
                 "+----+----+----+----+----+----+----+----+----+-------+\n" +
                 "|"
             );
 
             for (int i = 0; i < 9; i++)
             {
-                Console.Write($" {Scores[i]:D2} |");
+                string score = Scores[i] == 0 ? "  " : Convert.ToString(Scores[i]);
+                Console.Write($" {score, 2} |");
             }
 
-            Console.WriteLine($"  {Scores.Sum():D3}  |\n+----+----+----+----+----+----+----+----+----+-------+");
+            Console.WriteLine($"  {Scores.Sum(), 3}  |\n+----+----+----+----+----+----+----+----+----+-------+");
 
             // Wait for input
             Console.Write("\nPress any key to continue...");

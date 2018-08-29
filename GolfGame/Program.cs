@@ -73,7 +73,7 @@ namespace GolfGame
                         // Number 3
                         case ConsoleKey.NumPad3:
                         case ConsoleKey.D3:
-                            game.Club = 0.002;
+                            game.Club = 0.003;
                             game.Power += 30;
                             break;
 
