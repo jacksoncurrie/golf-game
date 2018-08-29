@@ -12,6 +12,7 @@ namespace GolfGame
         public double Club { get; set; }
         public bool HasWon { get; set; }
         public int CurrentHoleNum { get; set; }
+        public int[] Scores { get; set; }
 
         Hole currentHole;
         List<Hole> course;
@@ -21,36 +22,71 @@ namespace GolfGame
         public Game()
         {
             // Set course
-            course = new List<Hole>()
+            course = new List<Hole>
             {
-                new Hole(30, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39),
-                new Hole(39, 39)
+                new Hole("Flat", 39, 39),
+                new Hole("Moving Up", 33, 39),
+                new Hole("Up Higher", 28, 39),
+                new Hole("Hole Moving Up", 28, 33),
+                new Hole("Hole Up Higher", 28, 28),
+                new Hole("Hole Above Me", 30, 22),
+                new Hole("Hidden ball?", 3, 3),
+                new Hole("Don't Go Out", 25, 35),
+                new Hole("Big Drop", 5, 39)
             };
 
             // Set starting hole
             CurrentHoleNum = 0;
+
+            Scores = new int[9];
+
+            Console.Write
+            (
+                "======================\n" +
+                "===   Start Game   ===\n" +
+                "======================\n" +
+                "\n" +
+                "Nine hole golf game. Get the ball in the hole.\n" +
+                "\n" +
+                "Press any key to start game..."
+            );
+
+            Console.ReadKey();
+            Console.Clear();
         }
 
         public void StartHole()
         {
+            HasWon = false;
             currentHole = course[CurrentHoleNum];
-            shots = 0;
+
+            // Random hole position
+            Random random = new Random();
+            currentHole.HoleXPos = random.Next(50, 110);
+
+            if (currentHole == course[7])
+            {
+                currentHole.HoleXPos = 120;
+                currentHole.HoleYPos = random.Next(30, 35);
+            }
+            else if (currentHole == course[8])
+            {
+                currentHole.HoleXPos = 120;
+                currentHole.StartingHeight = random.Next(3, 8);
+            }
+
+            Console.Write
+            (
+                $"==========================\n" +
+                $"   {currentHole.Name}\n" +
+                $"==========================\n" +
+                $"\n" +
+                $"Press any key to start hole..."
+            );
+
+            Console.ReadKey();
+
+            Scores[CurrentHoleNum] = 0;
             ResetHole();
             DisplayHole();
         }
@@ -76,6 +112,7 @@ namespace GolfGame
         public void DisplayHole()
         {
             Console.Clear();
+
             // Loop through Array
             for (int i = 0; i < 40; i++)
             {
@@ -94,7 +131,7 @@ namespace GolfGame
         public void Path()
         {
             ResetHole();
-            shots++;
+            Scores[CurrentHoleNum]++;
 
             // Loop through y array
             for (int y = 0; y < 40; y++)
@@ -125,33 +162,74 @@ namespace GolfGame
 
             DisplayHole();
             Console.Write(CheckLanding());
+            Console.ReadKey();
+            Console.Clear();
+            ResetHole();
+            DisplayHole();
         }
 
         public string CheckLanding()
         {
-            int occurrence = 0;
+            // Check where ball lands
+            if (grid[currentHole.HoleYPos, currentHole.HoleXPos] == '*')
+            {
+                HasWon = true;
+                return "In the Hole!..";
+            }
+
+            if (Scores[CurrentHoleNum] >= 20)
+            {
+                HasWon = true;
+                return "Too many shots...";
+            }
+
+            // Loop through end column
+            if (grid[39, 120] != '*')
+            {
+                for (int j = 0; j <= 38; j++)
+                {
+                    if (grid[j, 120] == '*')
+                    {
+                        Scores[CurrentHoleNum]++;
+                        return "Out of bounds, two shot penatly\n\nNext Shot..";
+                    }
+                }
+            }
+
             // Loop through bottom row
             for (int i = 120; i > 0; i--)
-
+            {
                 // Check for location of ball
-                if (grid[currentHole.HoleYPos, i] == '*')
+                if (grid[currentHole.HoleYPos, i] == '*' && i > currentHole.HoleXPos)
                 {
-                    occurrence++;
-
-                    // Check where ball lands
-                    if (i == currentHole.HoleXPos)
-                    {
-                        HasWon = true;
-                        return "You won!\n\n";
-                    }
-                    else if (i > currentHole.HoleXPos)
-                        return "Too far\n\nNext Shot?";
-
-                    else if (i < currentHole.HoleXPos && occurrence == 2 )
-                        return "Too short\n\nNext Shot?";
+                    return "Too far\n\nNext Shot...";
                 }
+            }
 
-            return "Out of bounds\n\nNext Shot?";
+            return "Too short\n\nNext Shot...";
+        }
+
+        public void DisplayScoreCard()
+        {
+            Console.Write
+            (
+                "+----+----+----+----+----+----+----+----+----+-------+\n" +
+                "| 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | Total |\n" +
+                "+----+----+----+----+----+----+----+----+----+-------+\n" +
+                "|"
+            );
+
+            for (int i = 0; i < 9; i++)
+            {
+                Console.Write($" {Scores[i]:D2} |");
+            }
+
+            Console.WriteLine($"  {Scores.Sum():D3}  |\n+----+----+----+----+----+----+----+----+----+-------+");
+
+            // Wait for input
+            Console.Write("\nPress any key to continue...");
+            Console.ReadKey();
+            Console.Clear();
         }
     }
 }

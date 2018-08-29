@@ -8,19 +8,17 @@ namespace GolfGame
 {
     class Hole
     {
-        public int StartingHeight { get; private set; }
-        public int HoleXPos { get; private set; }
-        public int HoleYPos { get; private set; }
+        public string Name { get; set; }
+        public int StartingHeight { get; set; }
+        public int HoleXPos { get; set; }
+        public int HoleYPos { get; set; }
 
-        public Hole (int startingHeight, int holeYPos)
+        public Hole (string name, int startingHeight, int holeYPos)
         {
             // Set hole attributes
+            Name = name;
             StartingHeight = startingHeight;
             HoleYPos = holeYPos;
-
-            // Random hole position
-            Random random = new Random();
-            HoleXPos = random.Next(50, 120);
         }
     }
 }
