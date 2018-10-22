@@ -15,7 +15,6 @@ namespace GolfGame
 
         public Hole (string name, int startingHeight, int holeYPos)
         {
-            // Set hole attributes
             Name = name;
             StartingHeight = startingHeight;
             HoleYPos = holeYPos;

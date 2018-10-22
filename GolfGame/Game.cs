@@ -76,9 +76,7 @@ namespace GolfGame
 
             Console.Write
             (
-                $"===================\n" +
-                $" {currentHole.Name}\n" +
-                $"===================\n" +
+                $"{currentHole.Name}\n" +
                 $"\n" +
                 $"Press any key to start hole..."
             );
